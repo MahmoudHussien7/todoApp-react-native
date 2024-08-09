@@ -7,6 +7,7 @@ import {
   Button,
   FlatList,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 
 export default function Home({ navigation }) {
@@ -15,6 +16,8 @@ export default function Home({ navigation }) {
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState("All");
   const [editing, setEditing] = useState(null);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [todoToDelete, setTodoToDelete] = useState(null);
 
   const addTodo = () => {
     if (title && description) {
@@ -47,8 +50,14 @@ export default function Home({ navigation }) {
     return todos.filter((todo) => todo.status === filter.toLowerCase());
   };
 
-  const handleDelete = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const handleDelete = () => {
+    setTodos(todos.filter((todo) => todo.id !== todoToDelete));
+    setDeleteModalVisible(false);
+  };
+
+  const openDeleteModal = (id) => {
+    setTodoToDelete(id);
+    setDeleteModalVisible(true);
   };
 
   const handleEdit = (id) => {
@@ -118,7 +127,7 @@ export default function Home({ navigation }) {
             <Button
               title="Delete"
               color="red"
-              onPress={() => handleDelete(item.id)}
+              onPress={() => openDeleteModal(item.id)}
             />
             <Button
               title="Go to TodoDetails"
@@ -131,6 +140,28 @@ export default function Home({ navigation }) {
         title="Go to Splash"
         onPress={() => navigation.navigate("Splash")}
       />
+
+      <Modal
+        visible={deleteModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setDeleteModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>
+              Are you sure you want to delete this todo?
+            </Text>
+            <View style={styles.modalButtonContainer}>
+              <Button
+                title="Cancel"
+                onPress={() => setDeleteModalVisible(false)}
+              />
+              <Button title="Delete" color="red" onPress={handleDelete} />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -192,5 +223,27 @@ const styles = StyleSheet.create({
   todoDescription: {
     fontSize: 14,
     color: "#555",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: 300,
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    elevation: 10,
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  modalButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
