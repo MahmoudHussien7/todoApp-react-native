@@ -1,20 +1,27 @@
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { Provider } from "react-redux";
+import { store } from "./src/Store"; // Corrected path
 import Home from "./src/screens/Home";
 import Splash from "./src/screens/Splash";
-import TodoDetailes from "./src/screens/TodoDetailes";
+import TodoDetailes from "./src/screens/TodoDetailes"; // Corrected path
+import CompletedTasks from "./src/screens/CompletedTasks";
+import TodoService from "./services/TodoService";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
 
-export default function AppNavigator() {
+export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash">
-        <Stack.Screen name="Splash" component={Splash} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="TodoDetailes" component={TodoDetailes} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Splash">
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Splash" component={Splash} />
+          <Stack.Screen name="TodoDetailes" component={TodoDetailes} />
+          <Stack.Screen name="CompletedTasks" component={CompletedTasks} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
