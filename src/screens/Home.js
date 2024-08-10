@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home({ navigation }) {
   const [title, setTitle] = useState("");
@@ -18,6 +19,33 @@ export default function Home({ navigation }) {
   const [editing, setEditing] = useState(null);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [todoToDelete, setTodoToDelete] = useState(null);
+
+  useEffect(() => {
+    loadTodos();
+  }, []);
+
+  useEffect(() => {
+    saveTodos();
+  }, [todos]);
+
+  const saveTodos = async () => {
+    try {
+      await AsyncStorage.setItem("todos", JSON.stringify(todos));
+    } catch (error) {
+      console.error("Failed to save todos", error);
+    }
+  };
+
+  const loadTodos = async () => {
+    try {
+      const todosData = await AsyncStorage.getItem("todos");
+      if (todosData !== null) {
+        setTodos(JSON.parse(todosData));
+      }
+    } catch (error) {
+      console.error("Failed to load todos", error);
+    }
+  };
 
   const addTodo = () => {
     if (title && description) {
