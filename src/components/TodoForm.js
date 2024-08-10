@@ -1,6 +1,6 @@
 // src/components/TodoForm.js
 import React, { useState } from "react";
-import { StyleSheet, TextInput, Button, View } from "react-native";
+import { StyleSheet, TextInput, Button, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { addTodo, updateTodo } from "../Store";
 
@@ -35,10 +35,11 @@ export default function TodoForm({ editing, setEditing }) {
   };
 
   return (
-    <View>
+    <ScrollView>
       <TextInput
         style={styles.input}
         placeholder="Todo Title"
+        color="white"
         value={title}
         onChangeText={setTitle}
       />
@@ -52,7 +53,7 @@ export default function TodoForm({ editing, setEditing }) {
         title={editing ? "Update Todo" : "Add Todo"}
         onPress={handleAddOrUpdate}
       />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -63,5 +64,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
+    color: "white",
   },
 });
